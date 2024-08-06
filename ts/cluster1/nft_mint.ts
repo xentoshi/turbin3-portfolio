@@ -16,11 +16,35 @@ umi.use(mplTokenMetadata())
 const mint = generateSigner(umi);
 
 (async () => {
-    // let tx = ???
-    // let result = await tx.sendAndConfirm(umi);
-    // const signature = base58.encode(result.signature);
-    
-    // console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
+    try {
+        const metadataUri = "https://arweave.net/qQNc7iYksPpwuMu6Q8vWJ7iKz93FdXvfCyQtnkHxIzc";
 
-    console.log("Mint Address: ", mint.publicKey);
+        let tx = await createNft(
+            umi, 
+            {
+                mint, 
+                name: "Persian Rug",
+                symbol: "PRUG",  
+                uri: metadataUri, 
+                sellerFeeBasisPoints: percentAmount(1),
+                creators: [
+                    {
+                        address: myKeypairSigner.publicKey,
+                        share: 100,
+                        verified: false,
+                    }
+                ],
+            }
+        );
+        
+        let result = await tx.sendAndConfirm(umi);
+        
+        const signature = base58.encode(result.signature);
+        
+        console.log(`Successfully Minted! Check out your TX here:`);
+        console.log(`https://explorer.solana.com/tx/${signature}?cluster=devnet`);
+        console.log("Mint Address: ", mint.publicKey.toString());
+    } catch (error) {
+        console.error("Error minting NFT:", error);
+    }
 })();

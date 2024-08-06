@@ -2,6 +2,8 @@ import wallet from "../wba-wallet.json"
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 import { createGenericFile, createSignerFromKeypair, signerIdentity } from "@metaplex-foundation/umi"
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys"
+import { readFile } from "fs/promises"
+import path from "path"
 
 // Create a devnet connection
 const umi = createUmi('https://api.devnet.solana.com');
@@ -14,30 +16,49 @@ umi.use(signerIdentity(signer));
 
 (async () => {
     try {
-        // Follow this JSON structure
-        // https://docs.metaplex.com/programs/token-metadata/changelog/v1.0#json-structure
+        // Upload the image
+        const image = await readFile(path.join(__dirname, "/rug.png"));
+        const umiImageFile = createGenericFile(image, "rug.png", {
+            contentType: "image/png",
+        });
+        const [imageUri] = await umi.uploader.upload([umiImageFile]);
+        console.log("Your image URI: ", imageUri);
 
-        // const image = ???
-        // const metadata = {
-        //     name: "?",
-        //     symbol: "?",
-        //     description: "?",
-        //     image: "?",
-        //     attributes: [
-        //         {trait_type: '?', value: '?'}
-        //     ],
-        //     properties: {
-        //         files: [
-        //             {
-        //                 type: "image/png",
-        //                 uri: "?"
-        //             },
-        //         ]
-        //     },
-        //     creators: []
-        // };
-        // const myUri = ???
-        // console.log("Your image URI: ", myUri);
+        // Create and upload the metadata
+        const metadata = {
+            name: "Persian Rug",
+            symbol: "RUG",
+            description: "Soft and hand-made.",
+            image: imageUri,
+            attributes: [
+                {trait_type: 'Style', value: 'Elegant'}
+            ],
+            properties: {
+                files: [
+                    {
+                        type: "image/png",
+                        uri: imageUri
+                    },
+                ]
+            },
+            creators: [
+                {
+                    address: keypair.publicKey,
+                    share: 100
+                }
+            ]
+        };
+
+        const metadataFile = createGenericFile(
+            Buffer.from(JSON.stringify(metadata)),
+            "metadata.json",
+            {
+                contentType: "application/json",
+            }
+        );
+        const [metadataUri] = await umi.uploader.upload([metadataFile]);
+
+        console.log("Your metadata URI: ", metadataUri);
     }
     catch(error) {
         console.log("Oops.. Something went wrong", error);
