@@ -1,3 +1,6 @@
 [submodule "turbin3-prereq-rs"]
 	path = turbin3-prereq-rs
 	url = https://github.com/xentoshi/turbin3-prereq-rs
+[submodule "turbin3-prereq-ts"]
+	path = turbin3-prereq-ts
+	url = https://github.com/xentoshi/turbin3-prereq-ts
