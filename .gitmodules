@@ -7,3 +7,6 @@
 [submodule "marketplace"]
 	path = marketplace
 	url = https://github.com/xentoshi/marketplace.git
+[submodule "prediction-market"]
+	path = prediction-market
+	url = https://github.com/xentoshi/prediction-market.git
