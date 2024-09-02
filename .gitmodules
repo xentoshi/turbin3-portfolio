@@ -4,3 +4,6 @@
 [submodule "turbin3-prereq-ts"]
 	path = turbin3-prereq-ts
 	url = https://github.com/xentoshi/turbin3-prereq-ts
+[submodule "marketplace"]
+	path = marketplace
+	url = https://github.com/xentoshi/marketplace
