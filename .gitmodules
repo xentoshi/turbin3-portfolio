@@ -10,3 +10,6 @@
 [submodule "prediction-market"]
 	path = prediction-market
 	url = https://github.com/xentoshi/prediction-market.git
+[submodule "randomness"]
+	path = randomness
+	url = https://github.com/xentoshi/randomness.git
